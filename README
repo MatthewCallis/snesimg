@@ -9,3 +9,5 @@ By Matthew Callis eludevisibility.org / superfamicom.org
 -d	YES/NO		verbose information printed on screen\n
 
 Example: snesimg -f sprite-32x32.png -w 128 -h 32 -c asm
+
+Many Thanks to creaothceann, byuu and everyone else at http://board.byuu.org/ for help on the linux version that helped me replace my crappy osx version with a proper one
