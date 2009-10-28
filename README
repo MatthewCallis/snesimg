@@ -1,0 +1,11 @@
+snesimg v0.1 - Convert images to SNES Format with Palette
+By Matthew Callis eludevisibility.org / superfamicom.org
+=========================================================
+-f	string		input filename can be anyone one of: TIFF, BMP, JPEG, GIF, PNG, ICO, PSD, XBM, CUR, TGA, PICT, EPS
+-c	asm/-		the format of the palette; asm outputs in '.db $##, $##' format, otherwise it defaults to raw .clr format
+-pf	string		palette filename; if none it defaults to the input filename
+-w	int		overide width of image
+-h	int		overide height of image
+-d	YES/NO		verbose information printed on screen\n
+
+Example: snesimg -f sprite-32x32.png -w 128 -h 32 -c asm
