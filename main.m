@@ -10,7 +10,7 @@ int main(int argc, const char * argv[]){
 	NSImage *sourceImage = [[[NSImage alloc] initWithContentsOfFile:fileName] autorelease];
 	if(![sourceImage isValid]){
 		printf("Error: Invalid Image! See below for usage.\n\n");
-		printf("snesimg v0.1 - Convert images to SNES Format with Palette\n");
+		printf("snesimg v0.2 - Convert images to SNES Format with Palette\n");
 		printf("By Matthew Callis eludevisibility.org / superfamicom.org\n");
 		printf("=========================================================\n");
 		printf("-f	string		input filename can be anyone one of:\n");
@@ -66,13 +66,13 @@ int main(int argc, const char * argv[]){
 		if(debug) [grayImage writeToFile:[NSString stringWithFormat:@"%@.tif",fileName] atomically:TRUE];
 
 		NSBitmapImageRep *brep = [[NSBitmapImageRep alloc] initWithData:[[NSData alloc] initWithData:grayImage]];
-		NSData *crap = [NSData alloc];
-		crap = [brep representationUsingType:NSBMPFileType properties:nil];
-		const unsigned char *displayImage = [crap bytes];
+//		NSData *crap = [NSData alloc];
+//		crap = [brep representationUsingType:NSBMPFileType properties:nil];
+//		const unsigned char *displayImage = [crap bytes];
+		const unsigned char *displayImage = [[brep representationUsingType:NSBMPFileType properties:nil] bytes];
 
 		NSMutableDictionary *colorIndex = [NSMutableDictionary dictionary];
 		NSMutableArray *colorCounter = [NSMutableArray array];
-		NSColor *color = [[[NSColor alloc] init] autorelease];
 		NSInteger colorsUsed = 0;
 		NSUInteger offset = 0x36;
 		NSNumber *na = nil;
@@ -81,14 +81,13 @@ int main(int argc, const char * argv[]){
 		unsigned char colorValue;
 		for(y = 0; y < realHeight; y++){
 			for(x = 0; x < realWidth; x++){
-				color = [brep colorAtX:x y:y];
 				colorByte = displayImage[offset];
-				na = [[NSNumber alloc] initWithInteger: colorsUsed];
-				nb = [[NSNumber alloc] initWithUnsignedChar: colorByte];
-				if(![colorCounter containsObject:color]){
-					if(color){
-						if(debug) NSLog(@"Color %d: %@", colorsUsed, [color hexString]);
-						[colorCounter addObject:color];
+				na = [NSNumber numberWithInteger: colorsUsed];
+				nb = [NSNumber numberWithUnsignedChar: colorByte];
+				if(![colorCounter containsObject:[brep colorAtX:x y:y]]){
+					if([brep colorAtX:x y:y]){
+						if(debug) NSLog(@"Color %d: %@", colorsUsed, [[brep colorAtX:x y:y] hexString]);
+						[colorCounter addObject:[brep colorAtX:x y:y]];
 						[colorIndex setObject:na forKey:nb];
 						colorValue = colorsUsed;
 						colorsUsed++;
@@ -101,6 +100,7 @@ int main(int argc, const char * argv[]){
 				offset+=3;
 			}
 		}
+		[brep release];
 
 		for(y = 0; y < height; y += 8){
 			for(x = 0; x < width; x += 8){
@@ -118,7 +118,7 @@ int main(int argc, const char * argv[]){
 				z += 16;
 			}
 		}
-		NSData *snesData = [NSData data];
+		NSData *snesData = [[NSData alloc] init];
 		[snesData initWithBytesNoCopy:output length:(width*height)];
 		[snesData writeToFile:[NSString stringWithFormat:@"%@.pic",fileNameOnly] atomically:TRUE];
 	}

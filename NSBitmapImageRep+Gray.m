@@ -30,7 +30,6 @@
 
 - (NSUInteger) colorCount{
 	NSMutableArray *colorCounter = [[[NSMutableArray alloc] init] autorelease];
-	NSColor *color = [[[NSColor alloc] init] autorelease];
 	NSInteger colorsUsed = 0;
 	NSUInteger x = 0;
 	NSUInteger y = 0;
@@ -38,10 +37,9 @@
 	NSInteger height = [self pixelsHigh];
 	for(x = 0; x <= width; x++){
 		for(y = 0; y <= height; y++){
-			color = [self colorAtX:x y:y];
-			if(![colorCounter containsObject: color]){
-				if(color){
-					[colorCounter addObject: color];
+			if(![colorCounter containsObject: [self colorAtX:x y:y]]){
+				if([self colorAtX:x y:y]){
+					[colorCounter addObject: [self colorAtX:x y:y]];
 					colorsUsed++;
 				}
 			}
@@ -55,7 +53,6 @@
 	NSInteger realHeight = [self pixelsHigh];
 
 	NSMutableArray *colorCounter = [NSMutableArray array];
-	NSColor *color = [[[NSColor alloc] init] autorelease];
 	NSInteger x = 0;
 	NSInteger y = 0;
 	NSInteger colorsUsed = 0;
@@ -66,15 +63,13 @@
 	NSString *outputString = [NSString string];
 	NSString *outputHTML = [NSString string];
 	NSMutableData *output = [NSMutableData data];
-	unsigned char colorValue;
 	for(y = 0; y < realHeight; y++){
 		for(x = 0; x < realWidth; x++){
-			color = [self colorAtX:x y:y];
-			if(![colorCounter containsObject:color]){
-				if(color){
-					b = (int)([color blueComponent]*255);
-					g = (int)([color greenComponent]*255);
-					r = (int)([color redComponent]*255);
+			if(![colorCounter containsObject:[self colorAtX:x y:y]]){
+				if([self colorAtX:x y:y]){
+					b = (int)([[self colorAtX:x y:y] blueComponent]*255);
+					g = (int)([[self colorAtX:x y:y] greenComponent]*255);
+					r = (int)([[self colorAtX:x y:y] redComponent]*255);
 					// convert from 8-bit RGB to 5-bit BGR
 					bgrColor = (((b >> 3) << 10) | ((g >> 3) << 5) | (r >> 3));
 					if([palette isEqualToString:@"asm"]){
@@ -88,7 +83,7 @@
 							}
 						}
 						outputString = [outputString stringByAppendingFormat:@"$%02X, $%02X ", (bgrColor & 0xFF), (bgrColor >> 8)];
-						outputHTML = [outputHTML stringByAppendingFormat:@"#%@ ",[color hexString]];
+						outputHTML = [outputHTML stringByAppendingFormat:@"#%@ ",[[self colorAtX:x y:y] hexString]];
 					}
 					else{
 						NSUInteger bgrColorLow = (bgrColor & 0xFF);
@@ -96,8 +91,7 @@
 						[output appendBytes:&bgrColorLow length:1];
 						[output appendBytes:&bgrColorHigh length:1];
 					}
-					[colorCounter addObject:color];
-					colorValue = colorsUsed;
+					[colorCounter addObject:[self colorAtX:x y:y]];
 					colorsUsed++;
 				}
 			}
