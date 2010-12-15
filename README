@@ -1,4 +1,4 @@
-snesimg v0.1 - Convert images to SNES Format with Palette
+snesimg v0.2 - Convert images to SNES Format with Palette
 By Matthew Callis http://eludevisibility.org / http://superfamicom.org
 ==================================================================================================================
 -f	string		input filename can be anyone one of: TIFF, BMP, JPEG, GIF, PNG, ICO, PSD, XBM, CUR, TGA, PICT, EPS
