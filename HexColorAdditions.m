@@ -73,7 +73,7 @@ char intToHex(int digit){
 	
 	[myData initWithBytes:hexChar length:3];
 	
-	return [myData autorelease];
+	return myData;
 }
 
 - (NSString *)stringRepresentation{
@@ -137,7 +137,6 @@ NSColor *NSReadPixelsAverageForRect(NSRect aRect){
 	NSBitmapImageRep *imageRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:aRect];
 	
 	NSColor *average = NSReadPixelsAverage(imageRep);
-	[imageRep release];
 	
 	return average;
 }

@@ -25,11 +25,11 @@
 	[self drawInRect:NSMakeRect(0, 0, [newRep pixelsWide], [newRep pixelsHigh])];
 	[NSGraphicsContext restoreGraphicsState];
 	[newRep setSize:origSize];
-	return [newRep autorelease];
+	return newRep;
 }
 
 - (NSUInteger) colorCount{
-	NSMutableArray *colorCounter = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray *colorCounter = [[NSMutableArray alloc] init];
 	NSInteger colorsUsed = 0;
 	NSUInteger x = 0;
 	NSUInteger y = 0;
@@ -79,10 +79,10 @@
 							}
 							else{
 								outputString = [outputString stringByAppendingFormat:@"; %@\n.db ", outputHTML];
-								outputHTML = [NSString stringWithString:@""];
+								outputHTML = @"";
 							}
 						}
-						outputString = [outputString stringByAppendingFormat:@"$%02X, $%02X ", (bgrColor & 0xFF), (bgrColor >> 8)];
+						outputString = [outputString stringByAppendingFormat:@"$%02lX, $%02lX ", (bgrColor & 0xFF), (unsigned long)(bgrColor >> 8)];
 						outputHTML = [outputHTML stringByAppendingFormat:@"#%@ ",[[self colorAtX:x y:y] hexString]];
 					}
 					else{
